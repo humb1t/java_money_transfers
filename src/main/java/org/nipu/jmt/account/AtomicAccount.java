@@ -66,4 +66,12 @@ public class AtomicAccount implements Account {
     public BigDecimal getBalance() {
         return this.balance.get();
     }
+
+    @Override
+    public String toString() {
+        return "AtomicAccount{" +
+                "customerName='" + customerName + '\'' +
+                ", balance=" + balance.get() +
+                '}';
+    }
 }

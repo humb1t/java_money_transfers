@@ -17,19 +17,19 @@ public class ValidAccounts implements Accounts {
 
     @Override
     public Account add(Account account) {
-        Objects.nonNull(account);
+        assert Objects.nonNull(account);
         return origin.add(account);
     }
 
     @Override
     public Account find(Long id) {
-        Objects.nonNull(id);
+        assert Objects.nonNull(id);
         return origin.find(id);
     }
 
     @Override
     public List<Account> findByName(String name) {
-        Objects.nonNull(name);
+        assert Objects.nonNull(name);
         return origin.findByName(name);
     }
 
