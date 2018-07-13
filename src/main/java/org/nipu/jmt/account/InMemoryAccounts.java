@@ -23,10 +23,12 @@ public class InMemoryAccounts implements Accounts {
 
     @Override
     public Account add(Account account) {
-        return this.accounts.putIfAbsent(
-                idCounter.incrementAndGet(),
+        final long id = idCounter.incrementAndGet();
+        this.accounts.putIfAbsent(
+                id,
                 account
         );
+        return this.accounts.get(id);
     }
 
     @Override
