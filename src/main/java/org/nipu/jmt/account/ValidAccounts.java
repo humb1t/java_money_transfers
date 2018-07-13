@@ -24,13 +24,9 @@ public class ValidAccounts implements Accounts {
     @Override
     public Account find(Long id) {
         assert Objects.nonNull(id);
-        return origin.find(id);
-    }
-
-    @Override
-    public List<Account> findByName(String name) {
-        assert Objects.nonNull(name);
-        return origin.findByName(name);
+        final Account account = origin.find(id);
+        assert Objects.nonNull(account);
+        return account;
     }
 
     @Override

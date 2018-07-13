@@ -7,7 +7,8 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
- * All in one realization of transactions queue.
+ * All in one realization of transactions queue. {@link ArrayBlockingQueue} provides simple synchronization of
+ * work with transactions. We are luck of parallel transactions execution to be sure that our they are processed in right order.
  *
  * @author Nikita_Puzankov
  */
@@ -15,7 +16,7 @@ public class TransactionsQueue {
     private final Queue<Transaction> origin;
 
     public TransactionsQueue(int capacity) {
-        origin = new ArrayBlockingQueue(capacity);
+        origin = new ArrayBlockingQueue<>(capacity);
     }
 
     public boolean offer(Transaction transaction) {

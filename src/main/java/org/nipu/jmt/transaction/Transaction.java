@@ -1,11 +1,9 @@
 package org.nipu.jmt.transaction;
 
-import org.nipu.jmt.account.Account;
-
 import java.math.BigDecimal;
 
 /**
- * Main class to represent transaction of money between {@link Account}.
+ * Main class to represent transaction of money between {@link org.nipu.jmt.account.Account}.
  *
  * @author Nikita_Puzankov
  */

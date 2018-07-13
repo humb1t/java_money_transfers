@@ -12,4 +12,15 @@ public class AccountError {
     public AccountError(String message) {
         this.message = message;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountError{" +
+                "message='" + message + '\'' +
+                '}';
+    }
 }

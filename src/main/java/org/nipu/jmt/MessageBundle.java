@@ -10,9 +10,9 @@ import java.util.ResourceBundle;
  *
  * @author Nikita_Puzankov
  */
-public class MessageBundle {
+class MessageBundle {
 
-    private ResourceBundle messages;
+    private final ResourceBundle messages;
 
     public MessageBundle() {
         Locale locale = Locale.ENGLISH;
@@ -20,7 +20,7 @@ public class MessageBundle {
     }
 
     public MessageBundle(String languageTag) {
-        Objects.nonNull(languageTag);
+        assert Objects.nonNull(languageTag);
         Locale locale = new Locale(languageTag);
         this.messages = ResourceBundle.getBundle("localization/messages", locale);
     }

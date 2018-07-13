@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 /**
  * InMemory realization of {@link Accounts} interface.
@@ -32,14 +31,8 @@ public class InMemoryAccounts implements Accounts {
     }
 
     @Override
-    //TODO: make this API null safe
     public Account find(Long id) {
         return this.accounts.get(id);
-    }
-
-    @Override
-    public List<Account> findByName(String name) {
-        return this.accounts.values().stream().filter(account -> name.equalsIgnoreCase(name)).collect(Collectors.toList());
     }
 
     @Override

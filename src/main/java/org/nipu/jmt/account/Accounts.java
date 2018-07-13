@@ -12,7 +12,5 @@ public interface Accounts {
 
     Account find(Long id);
 
-    List<Account> findByName(String name);
-
     List<Account> findAll();
 }

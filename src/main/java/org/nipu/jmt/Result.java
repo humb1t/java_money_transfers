@@ -14,7 +14,6 @@ public class Result<V, E> {
     private final V value;
     private final E error;
 
-    //TODO: provide more elegant solution?
     public Result(V value, E error) {
         this.value = value;
         this.error = error;

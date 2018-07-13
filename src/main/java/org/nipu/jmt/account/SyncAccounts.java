@@ -25,11 +25,6 @@ public class SyncAccounts implements Accounts {
     }
 
     @Override
-    public synchronized List<Account> findByName(String name) {
-        return origin.findByName(name);
-    }
-
-    @Override
     public synchronized List<Account> findAll() {
         return origin.findAll();
     }

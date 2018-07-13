@@ -9,21 +9,20 @@ import org.nipu.jmt.transaction.JsonAsTransactionAmount;
 import org.nipu.jmt.transaction.Transaction;
 import org.nipu.jmt.transaction.TransactionsQueue;
 
+import java.util.Objects;
+
 /**
  * Main class for application start.
  *
  * @author Nikita_Puzankov
  */
 public class Main {
-    private static final String INDEX_MESSAGE = "{api_endpoints:[]}";
 
     public static void main(String[] args) {
         MessageBundle messageBundle = new MessageBundle();
-        Accounts accounts = new RestAccounts(
-                new SyncAccounts(
-                        new ValidAccounts(
-                                new InMemoryAccounts()
-                        )
+        Accounts accounts = new SyncAccounts(
+                new ValidAccounts(
+                        new InMemoryAccounts()
                 )
         );
         final TransactionsQueue transactionsQueue = new TransactionsQueue(100);
@@ -35,34 +34,38 @@ public class Main {
                 .event(EventType.SERVER_STARTED, event -> new Thread(brokerProcess).start())
                 .event(EventType.SERVER_STOPPED, event -> brokerProcess.disable())
                 //Mapping Section
-                //TODO: move inside accounts/RestAccounts.java
                 .routes(
                         () -> ApiBuilder.path("accounts",
                                 () -> {
-                                    ApiBuilder.get(context -> context.json(accounts.findAll()));//TODO: RestAccounts::findAll
+                                    ApiBuilder.get(context -> context.json(accounts.findAll()));
                                     ApiBuilder.get(":id", context -> {
-                                        final Account account = accounts.find(Long.valueOf(context.param("id")));
+                                        final Account account = accounts.find(Long.valueOf(Objects.requireNonNull(context.param("id"))));
                                         context.json(account);
                                     });
                                     ApiBuilder.post(context ->
                                             {
-                                                final JsonAsAccount jsonAsAccount = context.bodyAsClass(JsonAsAccount.class);
-                                                AtomicAccount atomicAccount = new AtomicAccount(
-                                                        jsonAsAccount.getCustomerName()
+                                                final JsonAsAccountDetails jsonAsAccountDetails =
+                                                        context.bodyAsClass(JsonAsAccountDetails.class);
+                                                final Account account = accounts.add(
+                                                        new Account(
+                                                                jsonAsAccountDetails.getCustomerName(),
+                                                                jsonAsAccountDetails.getOverdraft())
                                                 );
-                                                final Account account = accounts.add(atomicAccount);
                                                 context.json(account);
                                                 context.status(201);
                                             }
                                     );
                                     ApiBuilder.put(":fromId/pay/:toId", context ->
-                                            transactionsQueue.offer(
-                                                    new Transaction(
-                                                            Long.valueOf(context.param("fromId")),
-                                                            Long.valueOf(context.param("toId")),
-                                                            context.bodyAsClass(JsonAsTransactionAmount.class).getAmount()
-                                                    )
-                                            )
+                                            {
+                                                final boolean result = transactionsQueue.offer(
+                                                        new Transaction(
+                                                                Long.valueOf(Objects.requireNonNull(context.param("fromId"))),
+                                                                Long.valueOf(Objects.requireNonNull(context.param("toId"))),
+                                                                context.bodyAsClass(JsonAsTransactionAmount.class).getAmount()
+                                                        )
+                                                );
+                                                context.status(result ? 201 : 500);
+                                            }
                                     );
                                 }
                         )
