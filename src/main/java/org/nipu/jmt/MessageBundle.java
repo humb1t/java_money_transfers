@@ -20,7 +20,7 @@ class MessageBundle {
     }
 
     public MessageBundle(String languageTag) {
-        assert Objects.nonNull(languageTag);
+        Objects.requireNonNull(languageTag);
         Locale locale = new Locale(languageTag);
         this.messages = ResourceBundle.getBundle("localization/messages", locale);
     }

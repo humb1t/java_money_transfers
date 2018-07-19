@@ -27,7 +27,7 @@ public class Account {
         );
     }
 
-    public Result<Account, AccountError> withdrawMoney(BigDecimal amount) {
+    public synchronized Result<Account, AccountError> withdrawMoney(BigDecimal amount) {
         final BigDecimal futureBalancePlusOverdraft = overdraft.add(balance.get().subtract(amount));
         if (futureBalancePlusOverdraft.compareTo(BigDecimal.ZERO) < 0) {
             return new Result<>(
@@ -40,7 +40,7 @@ public class Account {
     }
 
 
-    public Result<Account, AccountError> putMoney(BigDecimal amount) {
+    public synchronized Result<Account, AccountError> putMoney(BigDecimal amount) {
         return getAccountAccountErrorResult(amount, BigDecimal::add);
     }
 
@@ -55,7 +55,7 @@ public class Account {
 
     @NotNull
     private Result<Account, AccountError> getAccountAccountErrorResult(BigDecimal amount, BinaryOperator<BigDecimal> operator) {
-        assert Objects.nonNull(amount);
+        Objects.requireNonNull(amount);
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
             return new Result<>(
                     null,

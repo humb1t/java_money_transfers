@@ -8,7 +8,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * All in one realization of transactions queue. {@link ArrayBlockingQueue} provides simple synchronization of
- * work with transactions. We are luck of parallel transactions execution to be sure that our they are processed in right order.
+ * work with transactions. We are luck of parallel transactions execution to be sure that they are processed in right order.
  *
  * @author Nikita_Puzankov
  */
@@ -20,7 +20,7 @@ public class TransactionsQueue {
     }
 
     public boolean offer(Transaction transaction) {
-        assert Objects.nonNull(transaction);
+        Objects.requireNonNull(transaction);
         return this.origin.offer(transaction);
     }
 
