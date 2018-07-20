@@ -3,7 +3,13 @@ package org.nipu.jmt.transaction;
 import org.nipu.jmt.account.Account;
 import org.nipu.jmt.account.Accounts;
 import org.nipu.jmt.account.InMemoryAccounts;
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.Timeout;
+import org.openjdk.jmh.annotations.Warmup;
 
 import java.math.BigDecimal;
 import java.util.concurrent.ExecutorService;
@@ -32,7 +38,7 @@ public class BrokerProcessBenchmark {
         final Account customer1 = accounts.add(new Account("customer1", overdraft));
         final Account customer2 = accounts.add(new Account("customer2", overdraft));
         final TransactionsQueue transactionsQueue = new TransactionsQueue(capacity);
-        final BrokerProcess brokerProcess = new BrokerProcess(transactionsQueue, accounts);
+        final BrokerProcess brokerProcess = new BrokerProcess("broker", transactionsQueue, accounts);
         final ExecutorService executorService = Executors.newFixedThreadPool(10);
         executorService.submit(brokerProcess);
         for (int i = 0; i < capacity; i++) {

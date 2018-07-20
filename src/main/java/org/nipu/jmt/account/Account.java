@@ -6,6 +6,8 @@ import org.nipu.jmt.Result;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BinaryOperator;
 
 /**
@@ -18,6 +20,7 @@ public class Account {
     private final String customerName;
     private final BigDecimal overdraft;
     private final AtomicReference<BigDecimal> balance;
+    private final Lock lock;
 
     public Account(String customerName, BigDecimal overdraft) {
         this.customerName = customerName;
@@ -25,9 +28,10 @@ public class Account {
         balance = new AtomicReference<>(
                 BigDecimal.ZERO
         );
+        this.lock = new ReentrantLock();
     }
 
-    public synchronized Result<Account, AccountError> withdrawMoney(BigDecimal amount) {
+    public Result<Account, AccountError> withdrawMoney(BigDecimal amount) {
         final BigDecimal futureBalancePlusOverdraft = overdraft.add(balance.get().subtract(amount));
         if (futureBalancePlusOverdraft.compareTo(BigDecimal.ZERO) < 0) {
             return new Result<>(
@@ -40,7 +44,7 @@ public class Account {
     }
 
 
-    public synchronized Result<Account, AccountError> putMoney(BigDecimal amount) {
+    public Result<Account, AccountError> putMoney(BigDecimal amount) {
         return getAccountAccountErrorResult(amount, BigDecimal::add);
     }
 
@@ -75,5 +79,9 @@ public class Account {
                 "customerName='" + customerName + '\'' +
                 ", balance=" + balance.get() +
                 '}';
+    }
+
+    public Lock getLock() {
+        return lock;
     }
 }

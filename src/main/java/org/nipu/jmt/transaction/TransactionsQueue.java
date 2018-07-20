@@ -19,6 +19,10 @@ public class TransactionsQueue {
         origin = new ArrayBlockingQueue<>(capacity);
     }
 
+    public TransactionsQueue(Queue<Transaction> queueImpl) {
+        this.origin = queueImpl;
+    }
+
     public boolean offer(Transaction transaction) {
         Objects.requireNonNull(transaction);
         return this.origin.offer(transaction);

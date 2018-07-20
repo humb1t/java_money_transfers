@@ -3,7 +3,12 @@ package org.nipu.jmt;
 import io.javalin.ApiBuilder;
 import io.javalin.Javalin;
 import io.javalin.event.EventType;
-import org.nipu.jmt.account.*;
+import org.nipu.jmt.account.Account;
+import org.nipu.jmt.account.Accounts;
+import org.nipu.jmt.account.InMemoryAccounts;
+import org.nipu.jmt.account.JsonAsAccountDetails;
+import org.nipu.jmt.account.SyncAccounts;
+import org.nipu.jmt.account.ValidAccounts;
 import org.nipu.jmt.transaction.BrokerProcess;
 import org.nipu.jmt.transaction.JsonAsTransactionAmount;
 import org.nipu.jmt.transaction.Transaction;
@@ -27,7 +32,7 @@ public class Main {
         );
         final TransactionsQueue transactionsQueue = new TransactionsQueue(100);
         BrokerProcess brokerProcess = new BrokerProcess(
-                transactionsQueue,
+                "broker", transactionsQueue,
                 accounts);
 
         Javalin.create()
